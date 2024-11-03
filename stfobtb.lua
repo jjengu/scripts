@@ -713,12 +713,5 @@ local LoadCommands = function()
 	end)
 end
 
-if not getgenv().Ran then
-	getgenv().Ran = true
-	if CheckStatus("STFOBTB") then
-		LoadScriptSTFOBTB()
-    		LoadCommands()
-	else
-		print("nil")
-	end
-end
+LoadScriptSTFOBTB()
+LoadCommands()
