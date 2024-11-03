@@ -1,16 +1,6 @@
 local RunService = game:GetService("RunService")
 
-local StatusURL = "https://pastebin.com/raw/D1127qFN"
 local OwnerURL = "https://pastebin.com/raw/uM8T5Ld0"
-
-local CheckStatus = function(gn)
-	local Status = loadstring(game:HttpGet(StatusURL))()
-	if Status[gn] then
-		return true
-	else
-		return false
-	end
-end
 
 local LoadScriptSTFOBTB = function()
 	local Players = game:GetService("Players")
@@ -713,7 +703,5 @@ local LoadCommands = function()
 	end)
 end
 
-if CheckStatus("STFOBTB") then
-	LoadScriptSTFOBTB()
-	LoadCommands()
-end
+LoadScriptSTFOBTB()
+LoadCommands()
