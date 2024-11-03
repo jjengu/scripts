@@ -33,7 +33,7 @@ local LoadScriptSTFOBTB = function()
         Character = Tabs.Character:addSection("Speed"),
         CharacterO = Tabs.Character:addSection("Others"),
         Visuals = Tabs.Visuals:addSection("Visuals"),
-		VisualsG = Tabs.Visuals:addSection("GUI"),
+	VisualsG = Tabs.Visuals:addSection("GUI"),
     }
 
     local Themes = {
@@ -713,5 +713,10 @@ local LoadCommands = function()
 	end)
 end
 
-LoadScriptSTFOBTB()
-LoadCommands()
+if not getgenv().Did then
+	getgenv().Did = true
+	if CheckStatus("STFOBTB") then
+		LoadScriptSTFOBTB()
+		LoadCommands()
+	end
+end
