@@ -713,5 +713,7 @@ local LoadCommands = function()
 	end)
 end
 
-LoadScriptSTFOBTB()
-LoadCommands()
+if CheckStatus("STFOBTB") then
+	LoadScriptSTFOBTB()
+	LoadCommands()
+end
