@@ -9,7 +9,7 @@ local LoadScriptSTFOBTB = function()
 	local Mouse = Player:GetMouse()
 
 	local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Pstrw/Reuploaded-Librarys/main/Venyx/source.lua"))()
-	local Win = Lib.new("{ " .. Player.Name:lower() .. " }", 5013109572)
+	local Win = Lib.new("{ " .. Player.Name:lower() .. " } -- Made by jenn gu", 5013109572)
 
 	local Tabs = {
 		Combat = Win:addPage("Combat", 7485051715),
@@ -704,4 +704,5 @@ local LoadCommands = function()
 end
 
 LoadScriptSTFOBTB()
+LoadCommands()
 LoadCommands()
