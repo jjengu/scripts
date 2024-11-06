@@ -705,4 +705,3 @@ end
 
 LoadScriptSTFOBTB()
 LoadCommands()
-LoadCommands()
