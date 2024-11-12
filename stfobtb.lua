@@ -32,7 +32,7 @@ local Sections = {
 	CharacterO = Tabs.Character:addSection("Others"),
 	Visuals = Tabs.Visuals:addSection("Visuals"),
 	VisualsG = Tabs.Visuals:addSection("GUI"),
-	Credits = Tabs.Credits:addSection(" ")
+	Credits = Tabs.Credits:addSection("Credits")
 }
 
 local Themes = {
