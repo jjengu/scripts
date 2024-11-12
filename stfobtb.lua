@@ -1,5 +1,6 @@
+local Request = request or http_request or (http and http.request) or syn and syn.request
+local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
-
 local Players = game:GetService("Players")
 local Boards = game.Workspace.Boards
 local Player = Players.LocalPlayer
@@ -7,20 +8,21 @@ local Mouse = Player:GetMouse()
 
 local hour = tonumber(os.date("%H", os.time()))
 if hour >= 0 and hour < 12 then
-    greeting = "Good morning"
+	greeting = "Good morning"
 elseif hour >= 12 and hour < 18 then
-    greeting = "Good afternoon"
+	greeting = "Good afternoon"
 else
-    greeting = "Good evening"
+	greeting = "Good evening"
 end
 
 local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Pstrw/Reuploaded-Librarys/main/Venyx/source.lua"))()
-local Win = Lib.new(greeting .. ", " .. game.Players.LocalPlayer.Name:lower(), 5013109572)
+local Win = Lib.new(greeting .. ", " .. Player.Name, 5013109572)
 
 local Tabs = {
 	Combat = Win:addPage("Combat", 7485051715),
 	Character = Win:addPage("Character", 13285102351),
 	Visuals = Win:addPage("Visuals", 13321848320--[[6851126250]]),
+	Credits = Win:addPage("Credits", 118847726887896)
 }
 
 local Sections = {
@@ -30,6 +32,7 @@ local Sections = {
 	CharacterO = Tabs.Character:addSection("Others"),
 	Visuals = Tabs.Visuals:addSection("Visuals"),
 	VisualsG = Tabs.Visuals:addSection("GUI"),
+	Credits = Tabs.Credits:addSection(" ")
 }
 
 local Themes = {
@@ -90,9 +93,9 @@ local Whitelist = function(PlayerName, All)
 		if not table.find(getgenv().Whitelist, Player.Name) then
 			table.insert(getgenv().Whitelist, Player.Name)
 		end
-        if not All then
-		    Notify('Whitelist', Player.Name .. " has been added to the whitelist.")
-        end
+		if not All then
+			Notify('Whitelist', Player.Name .. " has been added to the whitelist.")
+		end
 	else
 		Notify('Whitelist', "Player not found.")
 	end
@@ -105,9 +108,9 @@ local Blacklist = function(PlayerName, All)
 		if Index then
 			table.remove(getgenv().Whitelist, Index)
 		end
-        if not All then
-		    Notify('Blacklist', Player.Name .. " has been removed from the whitelist.")
-        end
+		if not All then
+			Notify('Blacklist', Player.Name .. " has been removed from the whitelist.")
+		end
 	else
 		Notify('Blacklist', "Player not found.")
 	end
@@ -364,6 +367,36 @@ end)
 
 Sections.VisualsG:addKeybind("Toggle GUI", Enum.KeyCode.LeftAlt, function()
 	Win:toggle()
+end)
+
+Sections.Credits:addButton("Made by Jengu", function() 
+	-- im pro
+end)
+
+Sections.Credits:addButton("VFly from IY", function() 
+	warn("https://infyiff.github.io/")
+	if Request then
+		local success, result = pcall(function()
+			return Request({
+				Url = 'http://127.0.0.1:6463/rpc?v=1',
+				Method = 'POST',
+				Headers = {
+					['Content-Type'] = 'application/json',
+					Origin = 'https://discord.com'
+				},
+				Body = HttpService:JSONEncode({
+					cmd = 'INVITE_BROWSER',
+					nonce = HttpService:GenerateGUID(false),
+					args = { code = "78ZuWSq" }
+				})
+			})
+		end)
+	end
+end)
+
+Sections.Credits:addButton("Venyx UI Library", function() 
+	setclipboard("made by dino")
+	warn("made by dino")
 end)
 
 Win:SelectPage(Win.pages[1], true)
