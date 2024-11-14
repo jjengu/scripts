@@ -1,3 +1,11 @@
+getgenv().Settings = {
+    CommandPrefix = "?",
+    LockedKeybind = "q",
+    TpKeybind = "v",
+    WaitTime = 0.277,
+    Offset = CFrame.new(-1.5, 0, 2.2),
+}
+
 local Request = request or http_request or (http and http.request) or syn and syn.request
 local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
@@ -22,6 +30,7 @@ local Tabs = {
 	Combat = Win:addPage("Combat", 7485051715),
 	Character = Win:addPage("Character", 13285102351),
 	Visuals = Win:addPage("Visuals", 13321848320--[[6851126250]]),
+    Controls = Win:addPage("Controls",117031620320135),
 	Credits = Win:addPage("Credits", 118847726887896)
 }
 
@@ -32,6 +41,7 @@ local Sections = {
 	CharacterO = Tabs.Character:addSection("Others"),
 	Visuals = Tabs.Visuals:addSection("Visuals"),
 	VisualsG = Tabs.Visuals:addSection("GUI"),
+    Controls = Tabs.Controls:addSection("Controls"),
 	Credits = Tabs.Credits:addSection("Credits")
 }
 
@@ -128,6 +138,26 @@ local BlacklistAll = function()
 		Blacklist(Player.Name, true)
 	end
 	Notify('Blacklist', "Blacklisted all players.")
+end
+
+local CheckInput = function(char, alphabetic)
+    if #char > 0 then
+        if alphabetic then
+            if char:match("^[a-zA-Z]$") then
+                return char:lower()
+            else
+                Notify("Input", "Input must be a single alphabetic character.")
+            end
+        else
+            if char:match("^[0-9%.]+$") then
+                return char:lower()
+            else
+                Notify("Input", "Input must be a numeric character or decimal.")
+            end
+        end
+    else
+        Notify("Input", "Input cannot be empty.")
+    end
 end
 
 local Fly = function(enabled)
@@ -367,6 +397,36 @@ end)
 
 Sections.VisualsG:addKeybind("Toggle GUI", Enum.KeyCode.LeftAlt, function()
 	Win:toggle()
+end)
+
+Sections.Controls:addTextbox("Command Prefix (Ex. " .. Settings.CommandPrefix .. "wl Detorious)", "Prefix", function(value, fl)
+    if fl then
+        Settings.CommandPrefix = value
+    end
+end)
+
+Sections.Controls:addTextbox("Lock Target Keybind", "Keybind", function(value, fl)
+    if fl then
+        if CheckInput(value, true) then
+            Settings.LockedKeybind = value
+        end
+    end
+end)
+
+Sections.Controls:addTextbox("Teleport Keybind", "Keybind", function(value, fl)
+    if fl then
+        if CheckInput(value, true) then
+            Settings.TpKeybind = value
+        end
+    end
+end)
+
+Sections.Controls:addTextbox("Teleport Delay (Ex. " .. Settings.WaitTime .. ")", "Number", function(value, fl)
+    if fl then
+        if CheckInput(value, false) then
+            Settings.WaitTime = value
+        end
+    end
 end)
 
 Sections.Credits:addButton("Made by Jengu", function() 
