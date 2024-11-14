@@ -22,8 +22,8 @@ local Tabs = {
 	Combat = Win:addPage("Combat", 7485051715),
 	Character = Win:addPage("Character", 13285102351),
 	Visuals = Win:addPage("Visuals", 13321848320--[[6851126250]]),
-    Controls = Win:addPage("Controls",117031620320135),
-	Credits = Win:addPage("Credits", 118847726887896)
+   	Controls = Win:addPage("Controls",117031620320135),
+	--Credits = Win:addPage("Credits", 118847726887896)
 }
 
 local Sections = {
@@ -33,8 +33,8 @@ local Sections = {
 	CharacterO = Tabs.Character:addSection("Others"),
 	Visuals = Tabs.Visuals:addSection("Visuals"),
 	VisualsG = Tabs.Visuals:addSection("GUI"),
-    Controls = Tabs.Controls:addSection("Controls"),
-	Credits = Tabs.Credits:addSection("Credits")
+    	Controls = Tabs.Controls:addSection("Controls"),
+	--Credits = Tabs.Credits:addSection("Credits")
 }
 
 local Themes = {
@@ -421,7 +421,7 @@ Sections.Controls:addTextbox("Teleport Delay (Ex. " .. Settings.WaitTime .. ")",
     end
 end)
 
-Sections.Credits:addButton("Made by Jengu", function() 
+--[[Sections.Credits:addButton("Made by Jengu", function() 
 	-- im pro
 end)
 
@@ -449,7 +449,7 @@ end)
 Sections.Credits:addButton("Venyx UI Library", function() 
 	setclipboard("made by dino")
 	warn("made by dino")
-end)
+end)]]
 
 Win:SelectPage(Win.pages[1], true)
 
