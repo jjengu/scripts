@@ -355,7 +355,7 @@ Sections.Reach:addToggle('Reach (FTI)', nil, function(state)
 	Reach2 = state
 end)
 
-Sections.Reach:addSlider('Detection Radius', 5, 5, 50, function(Value) -- start, lowest, highest
+Sections.Reach:addSlider('Detection Radius', 5, 5, 20, function(Value) -- start, lowest, highest
 	RRange = Value
 end)
 
