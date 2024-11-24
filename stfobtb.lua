@@ -1,10 +1,12 @@
-getgenv().Settings = {
-    CommandPrefix = "?",
-    LockedKeybind = "q",
-    TpKeybind = "v",
-    WaitTime = 0.277,
-    Offset = CFrame.new(-1.5, 0, 2.2),
-}
+if not Settings then
+	getgenv().Settings = {
+    		CommandPrefix = "?",
+    		LockedKeybind = "q",
+    		TpKeybind = "v",
+    		WaitTime = 0.277,
+    		Offset = CFrame.new(-1.5, 0, 2.2),
+	}
+end
 
 local Request = request or http_request or (http and http.request) or syn and syn.request
 local HttpService = game:GetService("HttpService")
