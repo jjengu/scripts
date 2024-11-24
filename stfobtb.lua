@@ -1,3 +1,11 @@
+getgenv().Settings = {
+    CommandPrefix = "?",
+    LockedKeybind = "q",
+    TpKeybind = "v",
+    WaitTime = 0.277,
+    Offset = CFrame.new(-1.5, 0, 2.2),
+}
+
 local Request = request or http_request or (http and http.request) or syn and syn.request
 local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
@@ -22,7 +30,7 @@ local Tabs = {
 	Combat = Win:addPage("Combat", 7485051715),
 	Character = Win:addPage("Character", 13285102351),
 	Visuals = Win:addPage("Visuals", 13321848320--[[6851126250]]),
-   	Controls = Win:addPage("Controls",117031620320135),
+	Controls = Win:addPage("Controls",117031620320135),
 	--Credits = Win:addPage("Credits", 118847726887896)
 }
 
@@ -33,7 +41,7 @@ local Sections = {
 	CharacterO = Tabs.Character:addSection("Others"),
 	Visuals = Tabs.Visuals:addSection("Visuals"),
 	VisualsG = Tabs.Visuals:addSection("GUI"),
-    	Controls = Tabs.Controls:addSection("Controls"),
+	Controls = Tabs.Controls:addSection("Controls"),
 	--Credits = Tabs.Credits:addSection("Credits")
 }
 
@@ -133,23 +141,23 @@ local BlacklistAll = function()
 end
 
 local CheckInput = function(char, alphabetic)
-    if #char > 0 then
-        if alphabetic then
-            if char:match("^[a-zA-Z]$") then
-                return char:lower()
-            else
-                Notify("Input", "Input must be a single alphabetic character.")
-            end
-        else
-            if char:match("^[0-9%.]+$") then
-                return char:lower()
-            else
-                Notify("Input", "Input must be a numeric character or decimal.")
-            end
-        end
-    else
-        Notify("Input", "Input cannot be empty.")
-    end
+	if #char > 0 then
+		if alphabetic then
+			if char:match("^[a-zA-Z]$") then
+				return char:lower()
+			else
+				Notify("Input", "Input must be a single alphabetic character.")
+			end
+		else
+			if char:match("^[0-9%.]+$") then
+				return char:lower()
+			else
+				Notify("Input", "Input must be a numeric character or decimal.")
+			end
+		end
+	else
+		Notify("Input", "Input cannot be empty.")
+	end
 end
 
 local Fly = function(enabled)
@@ -338,7 +346,11 @@ local OnCharacter = function(char)
 end
 
 Sections.Reach:addToggle('Reach', nil, function(state)
-	Reach = state
+	Reach1 = state
+end)
+
+Sections.Reach:addToggle('Reach (FTI)', nil, function(state)
+	Reach2 = state
 end)
 
 Sections.Reach:addSlider('Detection Radius', 5, 5, 50, function(Value) -- start, lowest, highest
@@ -392,33 +404,33 @@ Sections.VisualsG:addKeybind("Toggle GUI", Enum.KeyCode.LeftAlt, function()
 end)
 
 Sections.Controls:addTextbox("Command Prefix (Ex. " .. Settings.CommandPrefix .. "wl Detorious)", "Prefix", function(value, fl)
-    if fl then
-        Settings.CommandPrefix = value
-    end
+	if fl then
+		Settings.CommandPrefix = value
+	end
 end)
 
 Sections.Controls:addTextbox("Lock Target Keybind", "Keybind", function(value, fl)
-    if fl then
-        if CheckInput(value, true) then
-            Settings.LockedKeybind = value
-        end
-    end
+	if fl then
+		if CheckInput(value, true) then
+			Settings.LockedKeybind = value
+		end
+	end
 end)
 
 Sections.Controls:addTextbox("Teleport Keybind", "Keybind", function(value, fl)
-    if fl then
-        if CheckInput(value, true) then
-            Settings.TpKeybind = value
-        end
-    end
+	if fl then
+		if CheckInput(value, true) then
+			Settings.TpKeybind = value
+		end
+	end
 end)
 
 Sections.Controls:addTextbox("Teleport Delay (Ex. " .. Settings.WaitTime .. ")", "Number", function(value, fl)
-    if fl then
-        if CheckInput(value, false) then
-            Settings.WaitTime = value
-        end
-    end
+	if fl then
+		if CheckInput(value, false) then
+			Settings.WaitTime = value
+		end
+	end
 end)
 
 --[[Sections.Credits:addButton("Made by Jengu", function() 
@@ -505,24 +517,35 @@ RunService.Heartbeat:Connect(function()
 	local Humanoid = Character and Character:FindFirstChild("Humanoid")
 	for _, player in ipairs(Players:GetPlayers()) do
 		if player ~= Player and not table.find(getgenv().Whitelist, player.Name) and Humanoid and Humanoid.Health ~= 0 then
-			if Reach then
-				local tool = Player.Character:FindFirstChildWhichIsA("Tool")
-				local OCharacter = player.Character
-				if tool and tool.Handle and tool:FindFirstChild("SwordScript") and OCharacter and OCharacter:FindFirstChild("HumanoidRootPart") then
-					local distance = (Character.HumanoidRootPart.Position - OCharacter.HumanoidRootPart.Position).Magnitude
-					if distance <= RRange then
-						local limbs = {
-							OCharacter:FindFirstChild("Left Arm"),
-							OCharacter:FindFirstChild("Right Arm"),
-							OCharacter:FindFirstChild("Left Leg"),
-							OCharacter:FindFirstChild("Right Leg")
-						}
+			local tool = Player.Character:FindFirstChildWhichIsA("Tool")
+			local OCharacter = player.Character
+			if tool and tool.Handle and tool:FindFirstChild("SwordScript") and OCharacter and OCharacter:FindFirstChild("HumanoidRootPart") then
+				local distance = (Character.HumanoidRootPart.Position - OCharacter.HumanoidRootPart.Position).Magnitude
+				if distance <= RRange then
+					local limbs = {
+						OCharacter:FindFirstChild("Left Arm"),
+						OCharacter:FindFirstChild("Right Arm"),
+						OCharacter:FindFirstChild("Left Leg"),
+						OCharacter:FindFirstChild("Right Leg"),
+						OCharacter:FindFirstChild("Torso"),
+						OCharacter:FindFirstChild("Head"),
+					}
 
+					if Reach1 then
 						for _, limb in ipairs(limbs) do
-							if limb then
+							if limb and limb.Name ~= "Head" and limb.Name ~= "Torso" then
 								limb:BreakJoints()
 								limb.CFrame = tool.Handle.CFrame
 								limb.Transparency = NotTrans and 0 or 1
+							end
+						end
+					elseif Reach2 then
+						for _, limb in ipairs(limbs) do
+							if limb then
+								for i = 1, 2 do
+									firetouchinterest(tool.Handle, limb, 0)
+									firetouchinterest(tool.Handle, limb, 1)
+								end
 							end
 						end
 					end
