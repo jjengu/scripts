@@ -366,7 +366,9 @@ Sections.ReachO:addToggle('Teleport Kill', nil, function(state)
 			RemoveHighlight(LockedTarget)
 			LockedTarget = nil
 		end
-	end
+	elseif state then
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("EquipSword"):FireServer("Linked Sword", "4be5874f")
+    end
 end)
 
 Sections.ReachO:addToggle('View Target', nil, function(state)
@@ -506,17 +508,26 @@ for theme, color in pairs(Themes) do
 end
 
 RunService.Heartbeat:Connect(function()
-	if ESpeed and Player.Character then
-		local Character = Player.Character
-		local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
-		local Humanoid = Character:FindFirstChild("Humanoid")
-		if HumanoidRootPart and Humanoid then
-			HumanoidRootPart.CFrame = HumanoidRootPart.CFrame + Humanoid.MoveDirection * Speed
-		end
-	end
 
 	local Character = Player.Character
 	local Humanoid = Character and Character:FindFirstChild("Humanoid")
+    local Tools = Player.Backpack
+
+    if TP then
+        for _, item in ipairs(Player.Backpack:GetChildren()) do
+            if item:IsA("Tool") then
+                if item.Name ~= "Linked Sword" then
+                    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("UnequipSword"):FireServer(item.Name)
+                end
+            end
+        end
+        if Humanoid and Humanoid.Health ~= 0 then
+            if Tools:FindFirstChild("Linked Sword") then
+                Tools:FindFirstChild("Linked Sword").Parent = Character
+            end
+        end
+    end
+
 	for _, player in ipairs(Players:GetPlayers()) do
 		if player ~= Player and not table.find(getgenv().Whitelist, player.Name) and Humanoid and Humanoid.Health ~= 0 then
 			local tool = Player.Character:FindFirstChildWhichIsA("Tool")
@@ -553,6 +564,15 @@ RunService.Heartbeat:Connect(function()
 					end
 				end
 			end
+		end
+	end
+
+    if ESpeed and Character then
+		local Character = Character
+		local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
+		local Humanoid = Character:FindFirstChild("Humanoid")
+		if HumanoidRootPart and Humanoid then
+			HumanoidRootPart.CFrame = HumanoidRootPart.CFrame + Humanoid.MoveDirection * Speed
 		end
 	end
 
