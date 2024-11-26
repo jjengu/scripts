@@ -366,6 +366,7 @@ Sections.ReachO:addToggle('Teleport Kill', nil, function(state)
 			RemoveHighlight(LockedTarget)
 			LockedTarget = nil
 		end
+        Player.Character.Humanoid:UnequipTools()
 	elseif state then
         game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("EquipSword"):FireServer("Linked Sword", "4be5874f")
     end
