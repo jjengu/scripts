@@ -468,6 +468,7 @@ Sections.Credits:addButton("Venyx UI Library", function()
 end)]]
 
 Win:SelectPage(Win.pages[1], true)
+Win:Notify("Updater", "To prevent anticheat teleport kill will only work with the linked sword and it cannot be unequipped.")
 
 -- Handlers
 local BoardList = {
