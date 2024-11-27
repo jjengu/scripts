@@ -5,6 +5,7 @@ if not Settings then
     		TpKeybind = "v",
     		WaitTime = 0.277,
     		Offset = CFrame.new(-1.5, 0, 2.2),
+            	UpdateNotifs = true
 	}
 end
 
@@ -87,7 +88,7 @@ local FindPlr = function(starting)
 	return nil
 end
 
-local Notify = function(Title, Message)
+local  = function(Title, Message)
 	local CT = tick()
 	if CT - LID >= 1 then
 		game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -106,10 +107,10 @@ local Whitelist = function(PlayerName, All)
 			table.insert(getgenv().Whitelist, Player.Name)
 		end
 		if not All then
-			Notify('Whitelist', Player.Name .. " has been added to the whitelist.")
+			('Whitelist', Player.Name .. " has been added to the whitelist.")
 		end
 	else
-		Notify('Whitelist', "Player not found.")
+		('Whitelist', "Player not found.")
 	end
 end
 
@@ -121,10 +122,10 @@ local Blacklist = function(PlayerName, All)
 			table.remove(getgenv().Whitelist, Index)
 		end
 		if not All then
-			Notify('Blacklist', Player.Name .. " has been removed from the whitelist.")
+			('Blacklist', Player.Name .. " has been removed from the whitelist.")
 		end
 	else
-		Notify('Blacklist', "Player not found.")
+		('Blacklist', "Player not found.")
 	end
 end
 
@@ -132,14 +133,14 @@ local WhitelistAll = function()
 	for _, Player in ipairs(Players:GetPlayers()) do
 		Whitelist(Player.Name, true)
 	end
-	Notify('Whitelist', "Whitelisted all players.")
+	('Whitelist', "Whitelisted all players.")
 end
 
 local BlacklistAll = function()
 	for _, Player in ipairs(Players:GetPlayers()) do
 		Blacklist(Player.Name, true)
 	end
-	Notify('Blacklist', "Blacklisted all players.")
+	('Blacklist', "Blacklisted all players.")
 end
 
 local CheckInput = function(char, alphabetic)
@@ -148,17 +149,17 @@ local CheckInput = function(char, alphabetic)
 			if char:match("^[a-zA-Z]$") then
 				return char:lower()
 			else
-				Notify("Input", "Input must be a single alphabetic character.")
+				("Input", "Input must be a single alphabetic character.")
 			end
 		else
 			if char:match("^[0-9%.]+$") then
 				return char:lower()
 			else
-				Notify("Input", "Input must be a numeric character or decimal.")
+				("Input", "Input must be a numeric character or decimal.")
 			end
 		end
 	else
-		Notify("Input", "Input cannot be empty.")
+		("Input", "Input cannot be empty.")
 	end
 end
 
@@ -334,7 +335,7 @@ end
 
 local HandleTargetDeath = function()
 	if LockedTarget then
-		Notify('Target', LockedTarget.Name .. " has died.")
+		('Target', LockedTarget.Name .. " has died.")
 		RemoveHighlight(LockedTarget)
 		LockedTarget = nil
 	end
@@ -469,7 +470,9 @@ Sections.Credits:addButton("Venyx UI Library", function()
 end)]]
 
 Win:SelectPage(Win.pages[1], true)
-Win:Notify("Updater", "To prevent anticheat teleport kill will only work with the linked sword and it cannot be unequipped.")
+if Settings.UpdateNotifs then
+	Win:Notify("Updater", "To prevent anticheat teleport kill will only work with the linked sword and it cannot be unequipped.")
+end
 
 -- Handlers
 local BoardList = {
