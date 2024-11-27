@@ -1,4 +1,4 @@
-if not Settings then
+if not getgenv().Settings then
 	getgenv().Settings = {
     		CommandPrefix = "?",
     		LockedKeybind = "q",
