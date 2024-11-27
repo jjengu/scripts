@@ -1,4 +1,4 @@
-if not Settings then
+
 	getgenv().Settings = {
     		CommandPrefix = "?",
     		LockedKeybind = "q",
@@ -6,10 +6,10 @@ if not Settings then
     		WaitTime = 0.277,
     		Offset = CFrame.new(-1.5, 0, 2.2),
 	}
-end
 
-local Request = request or http_request or (http and http.request) or syn and syn.request
-local HttpService = game:GetService("HttpService")
+
+--local Request = request or http_request or (http and http.request) or syn and syn.request
+--local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local Boards = game.Workspace.Boards
@@ -32,7 +32,7 @@ local Tabs = {
 	Combat = Win:addPage("Combat", 7485051715),
 	Character = Win:addPage("Character", 13285102351),
 	Visuals = Win:addPage("Visuals", 13321848320--[[6851126250]]),
-	Controls = Win:addPage("Controls",117031620320135),
+	--Controls = Win:addPage("Controls",117031620320135),
 	--Credits = Win:addPage("Credits", 118847726887896)
 }
 
@@ -43,7 +43,7 @@ local Sections = {
 	CharacterO = Tabs.Character:addSection("Others"),
 	Visuals = Tabs.Visuals:addSection("Visuals"),
 	VisualsG = Tabs.Visuals:addSection("GUI"),
-	Controls = Tabs.Controls:addSection("Controls"),
+	--Controls = Tabs.Controls:addSection("Controls"),
 	--Credits = Tabs.Credits:addSection("Credits")
 }
 
@@ -410,7 +410,7 @@ Sections.VisualsG:addKeybind("Toggle GUI", Enum.KeyCode.LeftAlt, function()
 	Win:toggle()
 end)
 
-Sections.Controls:addTextbox("Command Prefix (Ex. " .. Settings.CommandPrefix .. "wl Detorious)", "Prefix", function(value, fl)
+--[[Sections.Controls:addTextbox("Command Prefix (Ex. " .. Settings.CommandPrefix .. "wl Detorious)", "Prefix", function(value, fl)
 	if fl then
 		Settings.CommandPrefix = value
 	end
@@ -438,7 +438,7 @@ Sections.Controls:addTextbox("Teleport Delay (Ex. " .. Settings.WaitTime .. ")",
 			Settings.WaitTime = value
 		end
 	end
-end)
+end)]]
 
 --[[Sections.Credits:addButton("Made by Jengu", function() 
 	-- im pro
