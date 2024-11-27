@@ -1,4 +1,4 @@
-if not getgenv().Settings then
+if not Settings then
 	getgenv().Settings = {
     		CommandPrefix = "?",
     		LockedKeybind = "q",
@@ -87,7 +87,7 @@ local FindPlr = function(starting)
 	return nil
 end
 
-local  = function(Title, Message)
+local Notify = function(Title, Message)
 	local CT = tick()
 	if CT - LID >= 1 then
 		game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -106,10 +106,10 @@ local Whitelist = function(PlayerName, All)
 			table.insert(getgenv().Whitelist, Player.Name)
 		end
 		if not All then
-			('Whitelist', Player.Name .. " has been added to the whitelist.")
+			Notify('Whitelist', Player.Name .. " has been added to the whitelist.")
 		end
 	else
-		('Whitelist', "Player not found.")
+		Notify('Whitelist', "Player not found.")
 	end
 end
 
@@ -121,10 +121,10 @@ local Blacklist = function(PlayerName, All)
 			table.remove(getgenv().Whitelist, Index)
 		end
 		if not All then
-			('Blacklist', Player.Name .. " has been removed from the whitelist.")
+			Notify('Blacklist', Player.Name .. " has been removed from the whitelist.")
 		end
 	else
-		('Blacklist', "Player not found.")
+		Notify('Blacklist', "Player not found.")
 	end
 end
 
@@ -132,14 +132,14 @@ local WhitelistAll = function()
 	for _, Player in ipairs(Players:GetPlayers()) do
 		Whitelist(Player.Name, true)
 	end
-	('Whitelist', "Whitelisted all players.")
+	Notify('Whitelist', "Whitelisted all players.")
 end
 
 local BlacklistAll = function()
 	for _, Player in ipairs(Players:GetPlayers()) do
 		Blacklist(Player.Name, true)
 	end
-	('Blacklist', "Blacklisted all players.")
+	Notify('Blacklist', "Blacklisted all players.")
 end
 
 local CheckInput = function(char, alphabetic)
@@ -148,17 +148,17 @@ local CheckInput = function(char, alphabetic)
 			if char:match("^[a-zA-Z]$") then
 				return char:lower()
 			else
-				("Input", "Input must be a single alphabetic character.")
+				Notify("Input", "Input must be a single alphabetic character.")
 			end
 		else
 			if char:match("^[0-9%.]+$") then
 				return char:lower()
 			else
-				("Input", "Input must be a numeric character or decimal.")
+				Notify("Input", "Input must be a numeric character or decimal.")
 			end
 		end
 	else
-		("Input", "Input cannot be empty.")
+		Notify("Input", "Input cannot be empty.")
 	end
 end
 
@@ -334,7 +334,7 @@ end
 
 local HandleTargetDeath = function()
 	if LockedTarget then
-		('Target', LockedTarget.Name .. " has died.")
+		Notify('Target', LockedTarget.Name .. " has died.")
 		RemoveHighlight(LockedTarget)
 		LockedTarget = nil
 	end
@@ -366,10 +366,7 @@ Sections.ReachO:addToggle('Teleport Kill', nil, function(state)
 			RemoveHighlight(LockedTarget)
 			LockedTarget = nil
 		end
-        Player.Character.Humanoid:UnequipTools()
-	elseif state then
-        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("EquipSword"):FireServer("Linked Sword", "4be5874f")
-    end
+	end
 end)
 
 Sections.ReachO:addToggle('View Target', nil, function(state)
@@ -469,6 +466,7 @@ Sections.Credits:addButton("Venyx UI Library", function()
 end)]]
 
 Win:SelectPage(Win.pages[1], true)
+
 -- Handlers
 local BoardList = {
 	Boards.SodaTimer.Screen, Boards.XPLeaders.Screen, Boards.SodasLeaders.Screen,
@@ -508,7 +506,6 @@ for theme, color in pairs(Themes) do
 end
 
 RunService.Heartbeat:Connect(function()
-
 	local Character = Player.Character
 	local Humanoid = Character and Character:FindFirstChild("Humanoid")
     local Tools = Player.Backpack
