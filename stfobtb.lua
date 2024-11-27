@@ -1,4 +1,4 @@
-if not getgenv().Settings then
+if not Settings then
 	getgenv().Settings = {
     		CommandPrefix = "?",
     		LockedKeybind = "q",
@@ -360,14 +360,19 @@ Sections.Reach:addSlider('Detection Radius', 5, 5, 20, function(Value) -- start,
 end)
 
 Sections.ReachO:addToggle('Teleport Kill', nil, function(state)
-	TP = state
-	if not state then
-		if LockedTarget then
-			RemoveHighlight(LockedTarget)
-			LockedTarget = nil
-		end
-	end
+    TP = state
+    if not state then
+        Player.Character.Humanoid:UnequipTools()
+        if LockedTarget then
+            RemoveHighlight(LockedTarget)
+            LockedTarget = nil
+
+        end
+    elseif state then
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("EquipSword"):FireServer("Linked Sword", "4be5874f")
+    end
 end)
+
 
 Sections.ReachO:addToggle('View Target', nil, function(state)
 	ViewPlayer = not ViewPlayer
