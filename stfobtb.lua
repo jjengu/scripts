@@ -1,11 +1,10 @@
-if not Settings then
+if not getgenv().Settings then
 	getgenv().Settings = {
     		CommandPrefix = "?",
     		LockedKeybind = "q",
     		TpKeybind = "v",
     		WaitTime = 0.277,
     		Offset = CFrame.new(-1.5, 0, 2.2),
-            	UpdateNotifs = true
 	}
 end
 
@@ -470,10 +469,6 @@ Sections.Credits:addButton("Venyx UI Library", function()
 end)]]
 
 Win:SelectPage(Win.pages[1], true)
-if Settings.UpdateNotifs then
-	Win:Notify("Updater", "To prevent anticheat teleport kill will only work with the linked sword and it cannot be unequipped.")
-end
-
 -- Handlers
 local BoardList = {
 	Boards.SodaTimer.Screen, Boards.XPLeaders.Screen, Boards.SodasLeaders.Screen,
