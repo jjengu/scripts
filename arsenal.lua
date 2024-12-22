@@ -163,7 +163,7 @@ end
 
 local ChangeHitbox = function()
     for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= Player and player.Character and player.Character.Humanoid.Health ~= 0 then
+        if player ~= Player and player.Character and player.Character:FindFirstChild("Humanoid").Health ~= 0 then
             if Settings.HitboxExpander then
                 UpdatePart(player, "RightUpperLeg")
                 UpdatePart(player, "LeftUpperLeg")
