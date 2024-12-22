@@ -4,6 +4,7 @@ local Player = Players.LocalPlayer
 local Camera = game.Workspace.CurrentCamera
 local RunService = game:GetService("RunService")
 
+-- these are all default values the script starts off with / edit them if you'd like or do so in the ui
 getgenv().Settings = {
     HitboxExpander = false,
     HitboxSize = 10,
