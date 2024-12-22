@@ -105,7 +105,7 @@ local UpdateBoxVis = function(player)
             return
         end
 
-        local rp = player.Character.HumanoidRootPart
+        local rp = player.Character:FindFirstChild("HumanoidRootPart")
         local head = player.Character:FindFirstChild("Head")
         local sRoot, visible = workspace.CurrentCamera:WorldToViewportPoint(rp.Position)
         local sHead = workspace.CurrentCamera:WorldToViewportPoint(head.Position)
