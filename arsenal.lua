@@ -4,7 +4,7 @@ local RunService = game:GetService("RunService")
 
 getgenv().Settings = {
     HitboxExpander = false,
-    HitboxSize = 8,
+    HitboxSize = 10,
     Boxes = false,
     TeamCheck = true,
     Names = false
