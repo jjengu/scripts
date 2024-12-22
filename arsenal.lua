@@ -108,6 +108,7 @@ local UpdateBoxVis = function(player)
         local rp = player.Character:FindFirstChild("HumanoidRootPart")
         local head = player.Character:FindFirstChild("Head")
         local sRoot, visible = workspace.CurrentCamera:WorldToViewportPoint(rp.Position)
+        repeat task.wait() until head
         local sHead = workspace.CurrentCamera:WorldToViewportPoint(head.Position)
 
         if not boxes[player] then
