@@ -1,5 +1,6 @@
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
+local Camera = game.Workspace.CurrentCamera
 local RunService = game:GetService("RunService")
 
 getgenv().Settings = {
@@ -7,35 +8,69 @@ getgenv().Settings = {
     HitboxSize = 10,
     Boxes = false,
     TeamCheck = true,
-    Names = false
+    Names = false,
+    ThirdPerson = false,  -- Add this setting to enable/disable third person mode
 }
 
+local connections = {}
 local boxes = {}
 local names = {}
 
 local UILibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/twink"))()
 local MainUI = UILibrary.Load("-# Made by jengu")
-local FirstPage = MainUI.AddPage("Main")
 
-local FirstToggle = FirstPage.AddToggle("Hitbox Expander", Settings.HitboxExpander, function(Value)
-    Settings.HitboxExpander = Value
-end)
+local ThirdPerson = function()
+    Player.CameraMode = Enum.CameraMode.Classic
+    Camera.CameraType = Enum.CameraType.Custom
 
-local FirstSlider = FirstPage.AddSlider("Hitbox Size", {Min = 5, Max = 30, Def = Settings.HitboxSize}, function(Value)
-    Settings.HitboxSize = Value
-end)
+    Player.CameraMinZoomDistance = 10
+    Player.CameraMaxZoomDistance = 50
+end
 
-local SecondToggle = FirstPage.AddToggle("Box Esp", Settings.Boxes, function(Value)
-    Settings.Boxes = Value
-end)
+local Pages = {
+    Combat = MainUI.AddPage("Combat"),
+    Character = MainUI.AddPage("Character"),
+    Visual = MainUI.AddPage("Visuals"),
+}
 
-local ThirdToggle = FirstPage.AddToggle("Name Esp", Settings.Name, function(Value)
-    Settings.Names = Value
-end)
+local Elements = {
+    Pages.Combat.AddToggle("Hitbox Expander", Settings.HitboxExpander, function(Value)
+        Settings.HitboxExpander = Value
+    end),
 
-local FourthToggle = FirstPage.AddToggle("Team Check", Settings.TeamCheck, function(Value)
-    Settings.TeamCheck = Value
-end)
+    Pages.Combat.AddSlider("Hitbox Size", {Min = 5, Max = 30, Def = Settings.HitboxSize}, function(Value)
+        Settings.HitboxSize = Value
+    end),
+
+    Pages.Visual.AddToggle("Box Esp", Settings.Boxes, function(Value)
+        Settings.Boxes = Value
+    end),
+
+    Pages.Visual.AddToggle("Name Esp", Settings.Name, function(Value)
+        Settings.Names = Value
+    end),
+
+    Pages.Visual.AddToggle("Third Person", Settings.ThirdPerson, function(Value)
+        Settings.ThirdPerson = Value
+        if Value then
+            ThirdPerson()
+            connections[#connections + 1] = Player:GetPropertyChangedSignal("CameraMode"):Connect(ThirdPerson)
+            connections[#connections + 1] = Camera:GetPropertyChangedSignal("CameraType"):Connect(ThirdPerson)
+            connections[#connections + 1] = Player:GetPropertyChangedSignal("CameraMinZoomDistance"):Connect(ThirdPerson)
+            connections[#connections + 1] = Player:GetPropertyChangedSignal("CameraMaxZoomDistance"):Connect(ThirdPerson)
+        else
+            for _, connection in ipairs(connections) do
+                if connection.Connected then
+                    connection:Disconnect()
+                end
+            end
+        end
+    end),
+
+    Pages.Visual.AddToggle("Team Check", Settings.TeamCheck, function(Value)
+        Settings.TeamCheck = Value
+    end),
+}
 
 local CreateBox = function(player)
     local box = Drawing.new("Square")
@@ -107,8 +142,8 @@ local UpdateBoxVis = function(player)
 
         local rp = player.Character:FindFirstChild("HumanoidRootPart")
         local head = player.Character:WaitForChild("Head")
-        local sRoot, visible = workspace.CurrentCamera:WorldToViewportPoint(rp.Position)
-        local sHead = workspace.CurrentCamera:WorldToViewportPoint(head.Position)
+        local sRoot, visible = Camera:WorldToViewportPoint(rp.Position)
+        local sHead = Camera:WorldToViewportPoint(head.Position)
 
         if not boxes[player] then
             CreateBox(player)
@@ -163,7 +198,7 @@ end
 
 local ChangeHitbox = function()
     for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= Player and player.Character and player.Character:FindFirstChild("Humanoid").Health ~= 0 then
+        if player ~= Player and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character:FindFirstChild("Humanoid").Health ~= 0 then
             if Settings.HitboxExpander then
                 UpdatePart(player, "HeadHB")
                 UpdatePart(player, "LeftUpperLeg")
