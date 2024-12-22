@@ -9,7 +9,7 @@ getgenv().Settings = {
     Boxes = false,
     TeamCheck = true,
     Names = false,
-    ThirdPerson = false,  -- Add this setting to enable/disable third person mode
+    ThirdPerson = false,
 }
 
 local connections = {}
