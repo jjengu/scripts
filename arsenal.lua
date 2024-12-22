@@ -13,7 +13,7 @@ getgenv().Settings = {
     ThirdPerson = false,
     SpeedBool = false,
     InfJump = false,
-    Speed = 150
+    Speed = 100
 }
 
 local JDebounce = false
@@ -51,7 +51,7 @@ local Elements = {
         Settings.SpeedBool = Value
     end),
 
-     Pages.Character.AddSlider("Speed Amount", {Min = 20, Max = 150, Def = Settings.Speed}, function(Value)
+     Pages.Character.AddSlider("Speed Amount", {Min = 20, Max = 100, Def = Settings.Speed}, function(Value)
         Settings.Speed = Value * 0.005
     end),
 
