@@ -1,3 +1,4 @@
+local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local Camera = game.Workspace.CurrentCamera
@@ -11,9 +12,11 @@ getgenv().Settings = {
     Names = false,
     ThirdPerson = false,
     SpeedBool = false,
+    InfJump = false,
     Speed = 150
 }
 
+local JDebounce = false
 local connections = {}
 local boxes = {}
 local names = {}
@@ -44,14 +47,17 @@ local Elements = {
         Settings.HitboxSize = Value
     end),
 
-    Pages.Character.AddSlider("Speed Amount", {Min = 20, Max = 200, Def = Settings.Speed}, function(Value)
-        Settings.Speed = Value * 0.005
-    end),
-
     Pages.Character.AddToggle("Speed Bool", Settings.SpeedBool, function(Value)
         Settings.SpeedBool = Value
     end),
 
+     Pages.Character.AddSlider("Speed Amount", {Min = 20, Max = 150, Def = Settings.Speed}, function(Value)
+        Settings.Speed = Value * 0.005
+    end),
+
+    Pages.Character.AddToggle("Infinite Jump", Settings.InfJump, function(Value)
+        Settings.InfJump = Value
+    end),
 
     Pages.Visual.AddToggle("Box Esp", Settings.Boxes, function(Value)
         Settings.Boxes = Value
@@ -220,6 +226,25 @@ local ChangeHitbox = function()
     end
 end
 
+local Jump = function()
+    local humanoid = Player.Character and Player.Character:FindFirstChildWhichIsA("Humanoid")
+    
+    if humanoid and not JDebounce and humanoid.Health ~= 0 then
+        JDebounce = true
+        
+        while (UserInputService:IsKeyDown(Enum.KeyCode.Space) or UserInputService:IsMouseButtonPressed(Enum.UserInputType.Touch)) and humanoid.Health > 0 do
+            if Settings.InfJump then
+                if humanoid:GetState() ~= Enum.HumanoidStateType.Jumping then
+                    humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end
+            task.wait(0.05)
+        end
+        
+        JDebounce = false
+    end
+end
+
 RunService.RenderStepped:Connect(function()
     UpdateAllBoxes()
     if Settings.SpeedBool then
@@ -232,6 +257,19 @@ RunService.RenderStepped:Connect(function()
 end)
 
 task.spawn(function() while task.wait(1) do ChangeHitbox() end end)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed then
+        if input.UserInputType == Enum.UserInputType.Touch or input.KeyCode == Enum.KeyCode.Space then
+            if Settings.InfJump then
+                Jump()
+            end
+        else
+           return
+        end
+    end
+end)
+
 
 Players.PlayerRemoving:Connect(function(player)
     if boxes[player] then
