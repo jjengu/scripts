@@ -10,6 +10,8 @@ getgenv().Settings = {
     TeamCheck = true,
     Names = false,
     ThirdPerson = false,
+    SpeedBool = false,
+    Speed = 150
 }
 
 local connections = {}
@@ -41,6 +43,15 @@ local Elements = {
     Pages.Combat.AddSlider("Hitbox Size", {Min = 5, Max = 30, Def = Settings.HitboxSize}, function(Value)
         Settings.HitboxSize = Value
     end),
+
+    Pages.Character.AddSlider("Speed Amount", {Min = 20, Max = 200, Def = Settings.Speed}, function(Value)
+        Settings.Speed = Value * 0.005
+    end),
+
+    Pages.Character.AddToggle("Speed Bool", Settings.SpeedBool, function(Value)
+        Settings.SpeedBool = Value
+    end),
+
 
     Pages.Visual.AddToggle("Box Esp", Settings.Boxes, function(Value)
         Settings.Boxes = Value
@@ -209,12 +220,18 @@ local ChangeHitbox = function()
     end
 end
 
-RunService.RenderStepped:Connect(UpdateAllBoxes)
-task.spawn(function()
-    while task.wait(1) do
-        ChangeHitbox()
+RunService.RenderStepped:Connect(function()
+    UpdateAllBoxes()
+    if Settings.SpeedBool then
+        local HRP = Player.Character:FindFirstChild("HumanoidRootPart")
+        local HM = Player.Character:FindFirstChild("Humanoid")
+        if HRP and HM then
+            HRP.CFrame = HRP.CFrame + HM.MoveDirection * Settings.Speed
+        end
     end
 end)
+
+task.spawn(function() while task.wait(1) do ChangeHitbox() end end)
 
 Players.PlayerRemoving:Connect(function(player)
     if boxes[player] then
