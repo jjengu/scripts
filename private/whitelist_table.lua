@@ -15,4 +15,5 @@ return {
   "Y0UONLYLIVE0NCE",
   "https://files.catbox.moe/fow24t.txt",
   "luredbylust",
+  "zsfwr6.txt",
 }
