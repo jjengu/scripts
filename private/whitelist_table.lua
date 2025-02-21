@@ -14,4 +14,5 @@ return {
   "<@696290792116977724>",
   "Y0UONLYLIVE0NCE",
   "https://files.catbox.moe/fow24t.txt",
+  "luredbylust",
 }
