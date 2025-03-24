@@ -12,7 +12,6 @@ if not getgenv().Settings then
     }
 end
 
-
 RunService.Stepped:Connect(function()
     local Character = Player.Character
     if Settings.Aura and Character and Character:FindFirstChild("HumanoidRootPart") then
