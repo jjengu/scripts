@@ -1,14 +1,16 @@
-getgenv().Settings = {
-    Aura = true,
-    Cooldown = 0.2,
-    Distance = 15,
-    Connections = {}
-}
-
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local RunService = game:GetService("RunService")
 local SlapEvent = game:GetService("ReplicatedStorage"):WaitForChild("b")
+
+if not getgenv().Settings then
+    getgenv().Settings = {
+        Aura = true,
+        Cooldown = 0.2,
+        Distance = 25,
+        Connections = {}
+    }
+end
 
 
 RunService.Stepped:Connect(function()
