@@ -9,4 +9,6 @@ local URL = Scripts[game.PlaceId]
 if URL and not RAN then
     getgenv().RAN = true
     loadstring(game:HttpGet(URL))()
+else
+    warn("🫚")
 end
