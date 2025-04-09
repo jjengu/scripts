@@ -8,6 +8,9 @@ local URL = Scripts[game.PlaceId]
 
 if URL and not RAN then
     getgenv().RAN = true
+    task.spawn(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/jjengu/scripts/refs/heads/main/private/integrity_check.lua"))()
+    end)
     loadstring(game:HttpGet(URL))()
 else
     warn("🫚")
