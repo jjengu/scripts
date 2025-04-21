@@ -13,5 +13,5 @@ if URL and not RAN then
     end)
     loadstring(game:HttpGet(URL))()
 else
-    warn("🫚")
+    warn("j")
 end
