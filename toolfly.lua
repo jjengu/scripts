@@ -187,6 +187,8 @@ MainS:addButton("Infinite Yield", function(v)
     loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
 end)
 
+Venyx:SelectPage(Venyx.pages[1], true)
+
 UIS.InputBegan:Connect(function(i) onInput(i, true) end)
 UIS.InputEnded:Connect(function(i) onInput(i, false) end)
 
