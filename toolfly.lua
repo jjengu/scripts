@@ -110,9 +110,7 @@ end
 
 local RebuildDropdown = function()
     if dropdown then
-		pcall(function()
-        	ToolSection:removeDropdown(dropdown)
-		end)
+        ToolSection:removeDropdown(dropdown)
     end
     dropdown = ToolSection:addDropdown("Tool Selection", DisplayNames, function(s)
         for _, item in ipairs(Inventory) do
