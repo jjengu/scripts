@@ -1,4 +1,5 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Pstrw/Reuploaded-Librarys/main/Venyx/source.lua"))()
+local Notify = loadstring(game:HttpGet("https://raw.githubusercontent.com/jjengu/librarys/refs/heads/main/Notification/stfo_notif/source.lua"))()
 local Venyx = Library.new("Tool Fly   |   _jengu#0", 5013109572)
 
 local UIS = game:GetService("UserInputService")
@@ -7,15 +8,12 @@ local Player = game:GetService("Players").LocalPlayer
 local Camera = workspace.CurrentCamera
 local ContextActionService = game:GetService("ContextActionService")
 
-Player.Character:WaitForChild("Humanoid"):UnequipTools()
-
 local Enabled = false
 local ToolCamera = true
 local Speed = 1
+local MaxZoom = 25
 local Inventory = {}
-local DisplayNames = {}
 local SelectedTool = nil
-local ToolName = nil
 
 local Keybinds = {
     ["Forward"] = "W",
@@ -28,29 +26,22 @@ local Keybinds = {
 
 local Forward, Backward, Left, Right, Down, Up = false, false, false, false, false, false
 local Zoom = 10
-local MinZoom, MaxZoom = 5, 25
+local MinZoom = 5
 local Yaw, Pitch = 0, 15
 local Dragging = false
 local LastMPos = Vector2.new()
 
-local dropdown
-
 local MovementKeys = {
-    Enum.KeyCode.W,
-    Enum.KeyCode.A,
-    Enum.KeyCode.S,
-    Enum.KeyCode.D,
-    Enum.KeyCode.Up,
-    Enum.KeyCode.Down,
-    Enum.KeyCode.Left,
-    Enum.KeyCode.Right
+    Enum.KeyCode.W, Enum.KeyCode.A, Enum.KeyCode.S, Enum.KeyCode.D,
+    Enum.KeyCode.Up, Enum.KeyCode.Down, Enum.KeyCode.Left, Enum.KeyCode.Right
 }
 
 local Main = Venyx:addPage("Main", 5012544693)
-local ToolSection = Main:addSection("Tool Selection")
 local MainS = Main:addSection("Main")
+local Settings = Main:addSection("Settings")
+local KeybindSec = Main:addSection("Keybinds")
 
-local BlockMovement = function(actionName, inputState, inputObject)
+local BlockMovement = function(_, inputState)
     if inputState == Enum.UserInputState.Begin or inputState == Enum.UserInputState.Change then
         return Enum.ContextActionResult.Sink
     end
@@ -58,22 +49,21 @@ local BlockMovement = function(actionName, inputState, inputObject)
 end
 
 local BlockAllMovement = function(enable)
-    if enable then
-        for _, key in ipairs(MovementKeys) do
-            ContextActionService:BindAction("BlockMove_" .. tostring(key), BlockMovement, false, key)
-        end
-    else
-        for _, key in ipairs(MovementKeys) do
-            ContextActionService:UnbindAction("BlockMove_" .. tostring(key))
+    for _, key in ipairs(MovementKeys) do
+        local action = "BlockMove_" .. tostring(key)
+        if enable then
+            ContextActionService:BindAction(action, BlockMovement, false, key)
+        else
+            ContextActionService:UnbindAction(action)
         end
     end
 end
 
 local onInput = function(input, isPressed)
     if input.UserInputType == Enum.UserInputType.Keyboard then
-        local keyName = input.KeyCode.Name
-        for action, bind in pairs(Keybinds) do
-            if keyName == bind:upper() then
+        local keyName = input.KeyCode.Name:upper()
+        for action, bindKey in pairs(Keybinds) do
+            if keyName == bindKey:upper() then
                 if action == "Forward" then Forward = isPressed end
                 if action == "Backward" then Backward = isPressed end
                 if action == "Left" then Left = isPressed end
@@ -87,12 +77,9 @@ end
 
 local UpdateToolList = function()
     Inventory = {}
-    DisplayNames = {}
-    local Tools = Player.Backpack:GetChildren()
-    for _, tool in ipairs(Tools) do
+    for _, tool in ipairs(Player.Backpack:GetChildren()) do
         if tool:IsA("Tool") then
-            table.insert(Inventory, { Name = tool.Name, Instance = tool })
-            table.insert(DisplayNames, tool.Name)
+            table.insert(Inventory, tool)
         end
     end
 end
@@ -100,52 +87,30 @@ end
 local PickRandomTool = function()
     UpdateToolList()
     if #Inventory > 0 then
-        local randIndex = math.random(1, #Inventory)
-        local toolData = Inventory[randIndex]
-        ToolName = toolData.Name
-        return toolData.Instance
+        return Inventory[math.random(1, #Inventory)]
     end
+    Notify({
+        Message = "No tools found in your backpack!",
+        BackgroundColor = Color3.fromRGB(255, 85, 85),
+        TextColor = Color3.fromRGB(255, 255, 255),
+        TextFont = Enum.Font.SourceSansBold,
+        Duration = 5
+    })
     return nil
 end
 
-local RebuildDropdown = function()
-    if dropdown then
-        ToolSection:removeDropdown(dropdown)
-    end
-    dropdown = ToolSection:addDropdown("Tool Selection", DisplayNames, function(s)
-        for _, item in ipairs(Inventory) do
-            if item.Name == s then
-                if Enabled then
-                    for i = 1, 5 do
-                        task.wait()
-                        if SelectedTool then SelectedTool:Activate() end
-                    end
-                    task.wait()
-                    local humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
-                    if not humanoid then return end
-                    humanoid:UnequipTools()
-                    SelectedTool = item.Instance
-                    humanoid:EquipTool(SelectedTool)
-                else
-                    SelectedTool = item.Instance
-                end
-                ToolName = s
-                break
-            end
-        end
+local EquipToolSafely = function(tool)
+    local humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
+    if not humanoid or not tool then return end
+    pcall(function()
+        humanoid:EquipTool(tool)
     end)
 end
 
 local OnCharacterAdded = function(character)
     local humanoid = character:WaitForChild("Humanoid")
     humanoid:UnequipTools()
-
-    SelectedTool = PickRandomTool()
-    if SelectedTool then
-        humanoid:EquipTool(SelectedTool)
-    end
-
-    RebuildDropdown()
+    SelectedTool = nil
 end
 
 Player.CharacterAdded:Connect(OnCharacterAdded)
@@ -153,25 +118,26 @@ if Player.Character then
     OnCharacterAdded(Player.Character)
 end
 
-
-MainS:addToggle("Tool Fly", Enabled, function(v)
-    Enabled = v
-    BlockAllMovement(v)
+MainS:addToggle("Tool Fly", false, function(v)
     local humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
     if not humanoid then return end
 
     if v then
-        if SelectedTool and SelectedTool.Parent ~= Player.Backpack then
-            SelectedTool.Parent = Player.Backpack
+        humanoid:UnequipTools()
+        SelectedTool = PickRandomTool()
+        if not SelectedTool then
+            return
         end
-        if SelectedTool then
-            humanoid:EquipTool(SelectedTool)
-        end
+        Enabled = true
+        BlockAllMovement(true)
+        EquipToolSafely(SelectedTool)
     else
+        Enabled = false
+        BlockAllMovement(false)
         if SelectedTool then
             for i = 1, 5 do
                 task.wait()
-                SelectedTool:Activate()
+                pcall(function() SelectedTool:Activate() end)
             end
         end
     end
@@ -181,7 +147,39 @@ MainS:addToggle("Tool POV", ToolCamera, function(v)
     ToolCamera = v
 end)
 
-MainS:addButton("Infinite Yield", function(v)
+Settings:addSlider("Fly Speed", Speed, 1, 10, function(v)
+    Speed = v == 0 and 0 or v * 0.2
+end)
+
+Settings:addSlider("Max Zoom", MaxZoom, 5, 50, function(v)
+    MaxZoom = v
+end)
+
+KeybindSec:addKeybind("Up Key", Enum.KeyCode.R, function() end, function(input)
+    local kc = nil
+    if typeof(input) == "Instance" and input.KeyCode then
+        kc = input.KeyCode
+    elseif typeof(input) == "EnumItem" then
+        kc = input
+    else
+        return
+    end
+    Keybinds["Up"] = kc.Name
+end)
+
+KeybindSec:addKeybind("Down Key", Enum.KeyCode.T, function() end, function(input)
+    local kc = nil
+    if typeof(input) == "Instance" and input.KeyCode then
+        kc = input.KeyCode
+    elseif typeof(input) == "EnumItem" then
+        kc = input
+    else
+        return
+    end
+    Keybinds["Down"] = kc.Name
+end)
+
+MainS:addButton("Infinite Yield", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
 end)
 
@@ -210,7 +208,7 @@ UIS.InputEnded:Connect(function(input)
 end)
 
 RunService.RenderStepped:Connect(function()
-    if not Enabled or not ToolCamera then
+    if not Enabled or not ToolCamera or not SelectedTool then
         Camera.CameraType = Enum.CameraType.Custom
         return
     end
@@ -219,7 +217,7 @@ RunService.RenderStepped:Connect(function()
     local hrp = Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
     if not hrp then return end
 
-    local Handle = SelectedTool and SelectedTool.Handle
+    local Handle = SelectedTool and SelectedTool:FindFirstChild("Handle")
     if Handle then
         if Dragging then
             local MDelta = UIS:GetMouseLocation() - LastMPos
@@ -236,10 +234,11 @@ RunService.RenderStepped:Connect(function()
 end)
 
 RunService.Heartbeat:Connect(function()
-    if not Enabled then
+    if not Enabled or not SelectedTool then
         local hrp = Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
-        if not hrp then return end
-        Player.DevEnableMouseLock = true
+        if hrp then
+            Player.DevEnableMouseLock = true
+        end
         return
     end
 
@@ -250,28 +249,14 @@ RunService.Heartbeat:Connect(function()
     Player.DevEnableMouseLock = false
 
     local camCFrame = Camera.CFrame
-    local FVector = Vector3.new(camCFrame.LookVector.X, 0, camCFrame.LookVector.Z)
-    if FVector.Magnitude == 0 then return end
-    FVector = FVector.Unit
-
-    local RVector = Vector3.new(camCFrame.RightVector.X, 0, camCFrame.RightVector.Z)
-    if RVector.Magnitude == 0 then return end
-    RVector = RVector.Unit
-
+    local FVector = Vector3.new(camCFrame.LookVector.X, 0, camCFrame.LookVector.Z).Unit
+    local RVector = Vector3.new(camCFrame.RightVector.X, 0, camCFrame.RightVector.Z).Unit
     local MVector = Vector3.new(0, 0, 0)
 
-    if Forward then
-        MVector = MVector + FVector
-    end
-    if Backward then
-        MVector = MVector - FVector
-    end
-    if Right then
-        MVector = MVector + RVector
-    end
-    if Left then
-        MVector = MVector - RVector
-    end
+    if Forward then MVector = MVector + FVector end
+    if Backward then MVector = MVector - FVector end
+    if Right then MVector = MVector + RVector end
+    if Left then MVector = MVector - RVector end
 
     if MVector.Magnitude > 0 then
         MVector = MVector.Unit * Speed
