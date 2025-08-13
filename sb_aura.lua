@@ -3,6 +3,8 @@ local Player = Players.LocalPlayer
 local RunService = game:GetService("RunService")
 local SlapEvent = game:GetService("ReplicatedStorage"):WaitForChild("b")
 
+-- guys this only works with the default glove sorry
+
 if not getgenv().Settings then
     getgenv().Settings = {
         Aura = true,
