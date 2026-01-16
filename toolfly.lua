@@ -1,6 +1,6 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Pstrw/Reuploaded-Librarys/main/Venyx/source.lua"))()
 local Notify = loadstring(game:HttpGet("https://raw.githubusercontent.com/jjengu/librarys/refs/heads/main/Notification/stfo_notif/source.lua"))()
-local Venyx = Library.new("Tool Fly   |   _jengu#0", 5013109572)
+local Venyx = Library.new("jenguxd the goat", 5013109572)
 
 local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
